@@ -1,3 +1,4 @@
+import 'package:daeng_time/screen/image_carousel_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
@@ -121,19 +122,39 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     SizedBox(height: 20,),
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(40))
+                    /*
+                     * 로그인 버튼
+                     */
+                    // Container(
+                    //   padding: EdgeInsets.symmetric(vertical: 16),
+                    //   decoration: BoxDecoration(
+                    //     color: Colors.white,
+                    //     borderRadius: BorderRadius.all(Radius.circular(40))
+                    //   ),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.center,
+                    //     children: [
+                    //       Text('LOGIN', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xfffffa502)),)
+                    //     ],
+                    //   ),
+                    // ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+                        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 130),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('LOGIN', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xfffffa502)),)
-                        ],
-                      ),
+                        onPressed: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ImageCarousleScreen())
+                        );
+                        },
+                        child: Text('LOGIN', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Color(0xffffa502)),),
                     ),
+                    /*
+                     * 로그인 버튼
+                     */
                     SizedBox(height: 20,),
                     Container(
                       child: Text('- OR -', style: TextStyle(color: Colors.white, fontSize: 16),),
@@ -147,15 +168,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       onTap: () async{
                         if(await isKakaoTalkInstalled()){
                           try{
-                            await UserApi.instance.loginWithKakaoTalk();
-                            print('카카오톡으로 로그인 성공');
+                            OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
+                            print('카카오톡으로 로그인 성공 ${token.accessToken}');
                             _get_user_info();
                           }catch(error){
                             print('카카오톡으로 로그인 실패 $error');
 
                             try{
-                              await UserApi.instance.loginWithKakaoAccount();
-                              print('카카오계정으로 로그인 성공');
+                              OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
+                              print('카카오계정으로 로그인 성공 ${token.accessToken}');
                               _get_user_info();
                             }catch(error){
                               print('카카오계정으로 로그인 실패 $error');
@@ -172,7 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                       },
                       child: Container(
-                        child: Image.asset('assets/kakao_login_medium_narrow.png', ),
+                        child: Image.asset('assets/kakao_login_medium_narrow.png',),
                       ),
                     ),
                   ],
